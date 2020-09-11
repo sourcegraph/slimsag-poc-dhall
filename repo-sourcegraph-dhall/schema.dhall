@@ -38,7 +38,8 @@ let Service = {
 }
 
 let Services = {
-    Frontend : Service
+    Frontend : Service,
+    IndexedSearch : Service
 }
 
 in {
