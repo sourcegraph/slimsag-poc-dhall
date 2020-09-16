@@ -1,3 +1,5 @@
+let Map = https://prelude.dhall-lang.org/v15.0.0/Map/Type
+
 let ContainerResources = {
     -- CPUs to request. Examples: 0.5, 1.5
     CPU : Double,
@@ -28,23 +30,26 @@ let Container = {
     HealthCheck : Optional HealthCheck
 }
 
-let Service = {
-    -- The name of the service, e.g. "frontend" or "indexed-search"
-    Name : Text,
-
-    -- Containers that make up this service. N replicas of this service may be deployed, which
-    -- implies all of these containers would be deployed N times.
-    Containers : List Container
-}
-
 let Services = {
-    Frontend : Service,
-    IndexedSearch : Service
+    Frontend : {
+        -- The name of the service, e.g. "frontend" or "indexed-search"
+        Name : Text,
+        Containers : {
+            Frontend : Container
+        }
+    },
+    IndexedSearch : {
+        -- The name of the service, e.g. "frontend" or "indexed-search"
+        Name : Text,
+        Containers : {
+            SearchIndexer : Container,
+            IndexedSearcher : Container
+        }
+    }
 }
 
 in {
     HealthCheck = HealthCheck,
     Container = Container,
-    Service = Service,
     Services = Services
 }

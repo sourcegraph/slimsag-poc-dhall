@@ -1,4 +1,6 @@
-let Container = {
+let schema = ./resources.schema.dhall
+
+let FrontendContainer = {
     Image = "sourcegraph/frontend",
     Requests = {
         CPU = 2.0,
@@ -14,9 +16,11 @@ let Container = {
         InitialDelaySeconds = 300,
         TimeoutSeconds = 5
     }
-} : (./schema.dhall).Container
+} : schema.Container
 
 in {
     Name = "frontend",
-    Containers = [ Container ]
-} : (./schema.dhall).Service
+    Containers = {
+        Frontend = FrontendContainer
+    }
+}

@@ -1,3 +1,5 @@
+let schema = ./resources.schema.dhall
+
 let IndexedSearcherContainer = {
     Image = "sourcegraph/indexed-searcher",
     Requests = {
@@ -14,7 +16,7 @@ let IndexedSearcherContainer = {
         InitialDelaySeconds = 0,
         TimeoutSeconds = 5
     }
-} : (./schema.dhall).Container
+} : schema.Container
 
 let SearchIndexerContainer = {
     Image = "sourcegraph/search-indexer",
@@ -26,10 +28,13 @@ let SearchIndexerContainer = {
         CPU = 4.0,
         Memory = "4g"
     },
-    HealthCheck = None (./schema.dhall).HealthCheck
-} : (./schema.dhall).Container
+    HealthCheck = None schema.HealthCheck
+} : schema.Container
 
 in {
     Name = "indexed-search",
-    Containers = [ IndexedSearcherContainer, SearchIndexerContainer ]
-} : (./schema.dhall).Service
+    Containers = {
+        IndexedSearcher = IndexedSearcherContainer,
+        SearchIndexer = SearchIndexerContainer
+    }
+}
